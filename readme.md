@@ -92,7 +92,73 @@ Se os dados já existirem no banco para uma combinação de `data` e `localizaca
 
 Caso contrário, ele insere os dados como novos registros.
 
-## Projeto ainda em construção
+# Previsão de Pesca com Árvore de Decisão
+
+Este projeto utiliza um **modelo de Árvore de Decisão** para prever se um determinado dia será bom para pescar **Robalo** com base em dados históricos das minhas pescarias, e informações importantes como **estação do ano**, **fase da lua**, **clima**.
+
+## Como o código funciona
+
+O código realiza as seguintes etapas:
+
+### 1. **Coleta de Dados**
+   - O código se conecta ao banco de dados PostgreSQL criado com os arquivos de dados desse repositório como descrito acima para recuperar dados do histórico das pescarias, incluindo as variáveis ambientais e as capturas de peixes (quantidade de peixes capturados).
+   - O banco de dados contém uma tabela `dados_pesca` com as seguintes colunas:
+     - `data`: A data da captura.
+     - `estacao_ano`: Estação do ano (Verão, Outono, Inverno, Primavera).
+     - `fase_lua`: Fase da lua no momento da captura (Lua Crescente, Lua Cheia, Lua Minguante, Lua Nova).
+     - `clima`: Clima no dia da captura (Ensolarado, Nublado, Chuvoso, Ventoso).
+     - `hora_dia`: Hora do dia (Manhã, Tarde, Noite).
+     - `quantidade`: Número de peixes capturados.
+     - `localizacao`: Localização da pescaria.
+
+### 2. **Preprocessamento dos Dados**
+   - **Transformação de Variáveis Categóricas**: 
+     - Variáveis como **estação do ano**, **fase da lua**, **clima** e **hora do dia** são convertidas de texto para valores numéricos usando a técnica de **Label Encoding**. Isso é feito para que o modelo de Árvore de Decisão possa processá-las.
+   - **Criação da Coluna de Alvo**:
+     - A variável alvo (target) `deve_ir_pescar` é criada, onde `1` significa que o número de peixes capturados foi maior que 4 (indicando que foi um bom dia de pesca), e `0` significa que o número de peixes foi 4 ou menos.
+
+### 3. **Treinamento do Modelo**
+   - O modelo de **Árvore de Decisão** é treinado com os dados históricos. O conjunto de dados é dividido em dois subconjuntos: **treinamento** e **teste**. O modelo aprende as relações entre as variáveis ambientais e o sucesso na pesca (indicando se deve ou não ir pescar).
+
+### 4. **Entrada do Usuário**
+   - O usuário é solicitado a fornecer uma **data futura** para quando deseja ir pescar, no formato `YYYY-MM-DD`.
+   - A partir dessa data fornecida, o código calcula:
+     - A **estação do ano** (Verão, Outono, Inverno ou Primavera), com base no mês da data.
+     - A **fase da lua** para essa data, utilizando uma aproximação simplificada do ciclo lunar.
+     - O **clima** (o usuário insere essa informação manualmente).
+
+### 5. **Cálculo da Diferença de Dias**
+   - A diferença em **dias** entre a data fornecida pelo usuário e a data atual é calculada e usada como uma das variáveis de entrada para o modelo.
+
+### 6. **Previsão e Explicação**
+   - O modelo de Árvore de Decisão é utilizado para prever se, com base nas condições fornecidas, o dia será bom para pescar.
+   - O modelo gera uma explicação sobre **qual variável** (ex: fase da lua, estação do ano) teve maior **influência** na decisão.
+   - O código imprime um **relatório de previsão** informando se deve ou não ir pescar e uma explicação como:
+     - "Deve ir pescar porque o histórico mostra que a fase lunar `Lua Cheia` na estação `Verão` teve bons resultados no passado!"
+
+### 7. **Exemplo de Saída**
+   - O código exibirá uma mensagem semelhante a:
+     ```
+     Deve ir pescar porque o histórico mostra que a fase lunar Lua Cheia na estação Verão teve bons resultados no passado!
+     ```
+
+### Como Executar
+
+1. **Requisitos**:
+   - Python 3.x
+   - Bibliotecas:
+     - `pandas`
+     - `scikit-learn`
+     - `psycopg2`
+     - `numpy`
+   - Banco de dados PostgreSQL com a tabela `dados_pesca` contendo dados históricos de pesca.
+
+2. **Instalar dependências**:
+   Se ainda não tiver as bibliotecas necessárias instaladas, execute o seguinte comando para instalá-las:
+   ```bash
+   pip install pandas scikit-learn psycopg2 numpy
+
+## Projeto ainda em construção Melhoria
 
 ## Contribuições
 
