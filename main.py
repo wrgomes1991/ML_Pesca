@@ -21,10 +21,9 @@ def calcular_estacao_ano(mes):
 
 # Função simplificada para calcular a fase da lua
 def calcular_fase_lua(data):
-    # Aproximação simplificada com base na data
-    base_data = datetime(2025, 1, 1)  # Lua cheia em 2025-01-01
+    base_data = datetime(2025, 1, 1)  
     diff = (data - base_data).days
-    fase = diff % 29  # Ciclo lunar de aproximadamente 29,5 dias
+    fase = diff % 29  
 
     if fase < 7:
         return 'Lua Crescente'
@@ -43,7 +42,6 @@ conn = psycopg2.connect(
     database="postgres"       # Substitua pelo nome do seu banco de dados
 )
 
-# Criar um cursor
 cursor = conn.cursor()
 
 # Consulta SQL para selecionar todos os dados da tabela 'dados_pesca'
@@ -61,7 +59,7 @@ df = pd.DataFrame(rows, columns=[
     'clima', 'hora_dia', 'tipo_peixe', 'quantidade', 'localizacao'
 ])
 
-# Fechar a conexão e o cursor
+# Fechar a conexão
 cursor.close()
 conn.close()
 
@@ -95,10 +93,10 @@ def transform_with_default(encoder, value, default_value=-1):
     """Transforma valor, retornando o índice do valor ou o valor padrão se desconhecido."""
     try:
         return encoder.transform([value])[0]
-    except ValueError:  # Quando o valor não for encontrado no encoder
+    except ValueError:  
         return default_value
 
-# Solicitar a data desejada de pesca do usuário
+# Solicitar a data desejada de pesca
 data_pesca_str = input("Digite a data que deseja ir pescar (formato: YYYY-MM-DD): ")
 
 # Converter a data fornecida em string para datetime
@@ -106,7 +104,7 @@ try:
     data_pesca = datetime.strptime(data_pesca_str, "%Y-%m-%d")
 except ValueError:
     print("Formato de data inválido. Usando a data atual.")
-    data_pesca = hoje  # Caso o formato seja inválido, usar a data atual
+    data_pesca = hoje  
 
 # Calcular a diferença em dias entre a data fornecida e a data de hoje
 dias_para_data_input = (data_pesca - hoje).days
@@ -150,7 +148,7 @@ y_pred = modelo.predict(X_test)
 predicao = modelo.predict(nova_df)
 
 # Obter a árvore de decisão para verificar as variáveis mais importantes
-feature_names = ['temperatura_agua', 'oxigenio_dissolvido', 'estacao_ano', 'fase_lua', 'clima', 'hora_dia', 'dias_para_data']
+feature_names = ['temperatura_agua', 'estacao_ano', 'fase_lua', 'clima', 'dias_para_data']
 importancia = modelo.feature_importances_
 
 

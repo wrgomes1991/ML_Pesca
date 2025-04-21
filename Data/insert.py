@@ -34,12 +34,12 @@ quantidade = EXCLUDED.quantidade;
 # Lendo o arquivo CSV com a codificação 'ISO-8859-1' ou 'latin1'
 with open(csv_file_path, newline='', encoding='ISO-8859-1') as csvfile:
     csvreader = csv.reader(csvfile)
-    next(csvreader)  # Pula o cabeçalho
+    next(csvreader)
 
     # Inserindo ou atualizando os dados no banco de dados
     for row in csvreader:
-        # Verificar se a linha possui o número adequado de colunas
-        if len(row) >= 10:  # Verifica se há pelo menos 10 colunas
+        
+        if len(row) >= 10:  
             data = {
                 'data': row[0],
                 'temperatura_agua': float(row[1]),
